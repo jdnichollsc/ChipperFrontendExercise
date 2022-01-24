@@ -18,9 +18,7 @@ const initialState = {
 const tradesSlice = createSlice({
   name: 'trade',
   initialState,
-  reducers: {
-    clearHistory: () => initialState,
-  },
+  reducers: {},
   extraReducers: builder => {
     builder.addCase(fetchTradeHistory.pending, state => {
       state.status = 'loading';
@@ -36,9 +34,7 @@ const tradesSlice = createSlice({
     builder.addCase(setHistoryError, (state, action) => {
       state.error = action.payload;
     });
-    builder.addCase(clearHistory, (state, action) => {
-      state.error = action.payload;
-    });
+    builder.addCase(clearHistory, () => initialState);
   },
 });
 
