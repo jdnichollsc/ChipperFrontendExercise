@@ -1,5 +1,7 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import {api, History} from '../../api';
+import {createSlice} from '@reduxjs/toolkit';
+
+import {History} from '../../../api';
+import {clearHistory, fetchTradeHistory, setHistoryError} from './actions';
 
 interface TradesState {
   data: History | undefined;
@@ -13,18 +15,12 @@ const initialState = {
   error: null,
 } as TradesState;
 
-export const fetchTradeHistory = createAsyncThunk(
-  'trades/fetchHistory',
-  async () => {
-    const response = await api.history();
-    return response.parsedBody as History;
-  },
-);
-
 const tradesSlice = createSlice({
   name: 'trade',
   initialState,
-  reducers: {},
+  reducers: {
+    clearHistory: () => initialState,
+  },
   extraReducers: builder => {
     builder.addCase(fetchTradeHistory.pending, state => {
       state.status = 'loading';
@@ -35,6 +31,12 @@ const tradesSlice = createSlice({
     });
     builder.addCase(fetchTradeHistory.rejected, (state, action) => {
       state.status = 'failed';
+      state.error = action.payload;
+    });
+    builder.addCase(setHistoryError, (state, action) => {
+      state.error = action.payload;
+    });
+    builder.addCase(clearHistory, (state, action) => {
       state.error = action.payload;
     });
   },

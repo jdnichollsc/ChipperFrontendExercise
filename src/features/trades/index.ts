@@ -1,2 +1,2 @@
 export * from './trades';
-export * from './trades-slice';
+export * from './state';
